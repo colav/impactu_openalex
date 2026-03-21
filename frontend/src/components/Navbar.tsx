@@ -10,12 +10,17 @@ import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
+import StorageIcon from "@mui/icons-material/Storage";
 import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import Chip from "@mui/material/Chip";
 import { alpha, styled } from "@mui/material/styles";
 import Link from "next/link";
+import { useDb } from "@/context/DbContext";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -56,13 +61,17 @@ const NAV_LINKS = [
 
 export default function Navbar() {
   const router = useRouter();
+  const { currentDb, defaultDb, databases, setCurrentDb } = useDb();
   const [q, setQ] = useState("");
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [dbAnchor, setDbAnchor] = useState<null | HTMLElement>(null);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (q.trim()) router.push(`/works?q=${encodeURIComponent(q.trim())}`);
   };
+
+  const activeDb = databases.find((d) => d.key === (currentDb || defaultDb));
 
   return (
     <>
@@ -95,6 +104,45 @@ export default function Navbar() {
           </Box>
 
           <Box sx={{ flexGrow: 1 }} />
+
+          {/* Database selector */}
+          {databases.length > 0 && (
+            <>
+              <Chip
+                icon={<StorageIcon />}
+                label={activeDb?.name ?? "DB"}
+                size="small"
+                onClick={(e) => setDbAnchor(e.currentTarget)}
+                sx={{
+                  mr: 1,
+                  bgcolor: "rgba(255,255,255,0.15)",
+                  color: "white",
+                  "& .MuiChip-icon": { color: "white" },
+                  "&:hover": { bgcolor: "rgba(255,255,255,0.25)" },
+                  cursor: "pointer",
+                }}
+              />
+              <Menu
+                anchorEl={dbAnchor}
+                open={Boolean(dbAnchor)}
+                onClose={() => setDbAnchor(null)}
+              >
+                {databases.map((d) => (
+                  <MenuItem
+                    key={d.key}
+                    selected={d.key === (currentDb || defaultDb)}
+                    onClick={() => {
+                      setCurrentDb(d.key);
+                      setDbAnchor(null);
+                    }}
+                  >
+                    <StorageIcon fontSize="small" sx={{ mr: 1, color: "text.secondary" }} />
+                    {d.name}
+                  </MenuItem>
+                ))}
+              </Menu>
+            </>
+          )}
 
           <Box component="form" onSubmit={handleSearch}>
             <Search>

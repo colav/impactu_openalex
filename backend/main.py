@@ -4,7 +4,7 @@ from contextlib import asynccontextmanager
 
 from app.config import settings
 from app.database import connect_db, close_db
-from app.routers import works, authors, institutions, sources, topics, concepts, stats
+from app.routers import works, authors, institutions, sources, topics, concepts, stats, databases
 
 
 @asynccontextmanager
@@ -34,6 +34,7 @@ app.include_router(sources.router, prefix="/api")
 app.include_router(topics.router, prefix="/api")
 app.include_router(concepts.router, prefix="/api")
 app.include_router(stats.router, prefix="/api")
+app.include_router(databases.router, prefix="/api")
 
 
 @app.get("/")

@@ -1,4 +1,5 @@
 import logging
+from fastapi import Query
 from motor.motor_asyncio import AsyncIOMotorClient
 from app.config import settings
 
@@ -6,7 +7,13 @@ logger = logging.getLogger(__name__)
 client: AsyncIOMotorClient = None
 
 
-def get_database():
+def get_database(db: str | None = Query(None, description="Database key (see /api/databases)")):
+    """FastAPI dependency: returns the Motor database for the requested key.
+
+    Falls back to the default MONGO_DB when *db* is absent or unknown.
+    """
+    if db and db in settings.databases():
+        return client[db]
     return client[settings.MONGO_DB]
 
 

@@ -5,6 +5,27 @@ const api = axios.create({
   timeout: 15000,
 });
 
+// ---- Database selection (global, injected into every request automatically)
+export function setApiDb(db: string | undefined) {
+  if (db) {
+    api.defaults.params = { ...api.defaults.params, db };
+  } else {
+    const p = { ...(api.defaults.params || {}) };
+    delete p.db;
+    api.defaults.params = p;
+  }
+}
+
+export interface DatabaseInfo {
+  key: string;
+  name: string;
+}
+
+export const databasesApi = {
+  list: (): Promise<{ default: string; available: DatabaseInfo[] }> =>
+    api.get("/databases").then((r) => r.data),
+};
+
 // ---- Generic list response
 export interface ListResponse<T> {
   meta: { count: number; page: number; per_page: number };
