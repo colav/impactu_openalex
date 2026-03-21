@@ -10,6 +10,7 @@ import Paper from "@mui/material/Paper";
 import Chip from "@mui/material/Chip";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import LoadingError from "@/components/LoadingError";
+import JsonViewer from "@/components/JsonViewer";
 import OaBadge from "@/components/OaBadge";
 
 function StatBox({ label, value }: { label: string; value: any }) {
@@ -90,6 +91,10 @@ export default function SourceDetailPage() {
           </Paper>
         </Grid>
       </Grid>
+
+      <Box sx={{ mt: 3 }}>
+        <JsonViewer data={source} />
+      </Box>
     </Container>
   );
 }

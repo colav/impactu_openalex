@@ -11,6 +11,7 @@ import Button from "@mui/material/Button";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import BubbleChartIcon from "@mui/icons-material/BubbleChart";
 import LoadingError from "@/components/LoadingError";
+import JsonViewer from "@/components/JsonViewer";
 
 function StatBox({ label, value }: { label: string; value: any }) {
   return (
@@ -86,6 +87,10 @@ export default function ConceptDetailPage() {
         <Typography variant="subtitle2" color="text.secondary">OpenAlex ID</Typography>
         <Typography variant="caption">{concept.id}</Typography>
       </Paper>
+
+      <Box sx={{ mt: 2 }}>
+        <JsonViewer data={concept} />
+      </Box>
     </Container>
   );
 }

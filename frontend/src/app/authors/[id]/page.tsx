@@ -11,6 +11,7 @@ import Chip from "@mui/material/Chip";
 import Avatar from "@mui/material/Avatar";
 import Divider from "@mui/material/Divider";
 import LoadingError from "@/components/LoadingError";
+import JsonViewer from "@/components/JsonViewer";
 
 function StatBox({ label, value }: { label: string; value: any }) {
   return (
@@ -142,6 +143,10 @@ export default function AuthorDetailPage() {
         <Typography variant="caption" color="text.secondary">
           OpenAlex: {author.id}
         </Typography>
+      </Box>
+
+      <Box sx={{ mt: 2 }}>
+        <JsonViewer data={author} />
       </Box>
     </Container>
   );

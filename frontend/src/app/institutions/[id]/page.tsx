@@ -12,6 +12,7 @@ import Button from "@mui/material/Button";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import LoadingError from "@/components/LoadingError";
+import JsonViewer from "@/components/JsonViewer";
 
 function StatBox({ label, value }: { label: string; value: any }) {
   return (
@@ -117,6 +118,10 @@ export default function InstitutionDetailPage() {
 
       <Box sx={{ mt: 3 }}>
         <Typography variant="caption" color="text.secondary">OpenAlex: {inst.id}</Typography>
+      </Box>
+
+      <Box sx={{ mt: 2 }}>
+        <JsonViewer data={inst} />
       </Box>
     </Container>
   );

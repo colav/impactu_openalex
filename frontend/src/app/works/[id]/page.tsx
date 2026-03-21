@@ -20,6 +20,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import Link from "next/link";
 import LoadingError from "@/components/LoadingError";
 import OaBadge from "@/components/OaBadge";
+import JsonViewer from "@/components/JsonViewer";
 
 export default function WorkDetailPage() {
   const params = useParams();
@@ -179,6 +180,10 @@ export default function WorkDetailPage() {
           </Paper>
         </Grid>
       </Grid>
+
+      <Box sx={{ mt: 3 }}>
+        <JsonViewer data={work} />
+      </Box>
     </Container>
   );
 }

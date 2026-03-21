@@ -8,6 +8,7 @@ import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Chip from "@mui/material/Chip";
 import LoadingError from "@/components/LoadingError";
+import JsonViewer from "@/components/JsonViewer";
 
 export default function TopicDetailPage() {
   const params = useParams();
@@ -57,6 +58,10 @@ export default function TopicDetailPage() {
         <Typography variant="subtitle2" color="text.secondary">OpenAlex ID</Typography>
         <Typography variant="caption">{topic.id}</Typography>
       </Paper>
+
+      <Box sx={{ mt: 2 }}>
+        <JsonViewer data={topic} />
+      </Box>
     </Container>
   );
 }
