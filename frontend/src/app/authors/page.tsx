@@ -1,7 +1,8 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { authorsApi, ListResponse, Author } from "@/lib/api";
+import { authorsApi, ListResponse, Author, resolveOpenAlexRoute } from "@/lib/api";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
@@ -57,6 +58,7 @@ function AuthorCard({ author }: { author: Author }) {
 }
 
 export default function AuthorsPage() {
+  const router = useRouter();
   const [q, setQ] = useState("");
   const [debouncedQ, setDebouncedQ] = useState("");
   const [page, setPage] = useState(1);
@@ -69,6 +71,8 @@ export default function AuthorsPage() {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
+    const route = resolveOpenAlexRoute(q);
+    if (route) { router.push(route); return; }
     setDebouncedQ(q);
     setPage(1);
   };
@@ -82,7 +86,8 @@ export default function AuthorsPage() {
 
       <Box component="form" onSubmit={handleSearch} sx={{ display: "flex", gap: 2, mb: 3 }}>
         <TextField
-          label="Buscar por nombre"
+          label="Buscar por nombre o ID de OpenAlex"
+          placeholder="ej. García o https://openalex.org/A1234"
           value={q}
           onChange={(e) => setQ(e.target.value)}
           size="small"

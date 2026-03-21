@@ -1,7 +1,8 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { sourcesApi, ListResponse, Source } from "@/lib/api";
+import { sourcesApi, ListResponse, Source, resolveOpenAlexRoute } from "@/lib/api";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
@@ -46,6 +47,7 @@ function SourceCard({ source }: { source: Source }) {
 }
 
 export default function SourcesPage() {
+  const router = useRouter();
   const [q, setQ] = useState("");
   const [debouncedQ, setDebouncedQ] = useState("");
   const [page, setPage] = useState(1);
@@ -58,6 +60,8 @@ export default function SourcesPage() {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
+    const route = resolveOpenAlexRoute(q);
+    if (route) { router.push(route); return; }
     setDebouncedQ(q);
     setPage(1);
   };
@@ -71,7 +75,8 @@ export default function SourcesPage() {
 
       <Box component="form" onSubmit={handleSearch} sx={{ display: "flex", gap: 2, mb: 3 }}>
         <TextField
-          label="Buscar por nombre"
+          label="Buscar por nombre o ID de OpenAlex"
+          placeholder="ej. Nature o https://openalex.org/S1234"
           value={q}
           onChange={(e) => setQ(e.target.value)}
           size="small"

@@ -1,7 +1,8 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { institutionsApi, ListResponse, Institution } from "@/lib/api";
+import { institutionsApi, ListResponse, Institution, resolveOpenAlexRoute } from "@/lib/api";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
@@ -45,6 +46,7 @@ function InstitutionCard({ inst }: { inst: Institution }) {
 }
 
 export default function InstitutionsPage() {
+  const router = useRouter();
   const [q, setQ] = useState("");
   const [debouncedQ, setDebouncedQ] = useState("");
   const [page, setPage] = useState(1);
@@ -57,6 +59,8 @@ export default function InstitutionsPage() {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
+    const route = resolveOpenAlexRoute(q);
+    if (route) { router.push(route); return; }
     setDebouncedQ(q);
     setPage(1);
   };
@@ -70,7 +74,8 @@ export default function InstitutionsPage() {
 
       <Box component="form" onSubmit={handleSearch} sx={{ display: "flex", gap: 2, mb: 3 }}>
         <TextField
-          label="Buscar por nombre"
+          label="Buscar por nombre o ID de OpenAlex"
+          placeholder="ej. Universidad de Antioquia o https://openalex.org/I1234"
           value={q}
           onChange={(e) => setQ(e.target.value)}
           size="small"

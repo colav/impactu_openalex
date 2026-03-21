@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, Query, HTTPException
 from app.database import get_database
-from app.utils import build_text_filter, clean_doc, paginate_params, openalex_id_filter
+from app.utils import build_search_filter, clean_doc, paginate_params, openalex_id_filter
 
 router = APIRouter(prefix="/authors", tags=["authors"])
 
@@ -12,7 +12,7 @@ async def list_authors(
     per_page: int = Query(10, ge=1, le=100),
     db=Depends(get_database),
 ):
-    filt = build_text_filter(q, ["display_name"])
+    filt = build_search_filter(q, ["display_name"])
     skip, limit = paginate_params(page, per_page)
     collection = db["authors"]
 

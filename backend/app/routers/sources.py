@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, Query, HTTPException
 from app.database import get_database
-from app.utils import build_text_filter, clean_doc, paginate_params, openalex_id_filter
+from app.utils import build_search_filter, clean_doc, paginate_params, openalex_id_filter
 
 router = APIRouter(prefix="/sources", tags=["sources"])
 
@@ -14,7 +14,7 @@ async def list_sources(
     type: str | None = None,
     db=Depends(get_database),
 ):
-    filt = build_text_filter(q, ["display_name"])
+    filt = build_search_filter(q, ["display_name"])
     if is_oa is not None:
         filt["is_oa"] = is_oa
     if type:

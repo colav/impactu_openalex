@@ -138,6 +138,37 @@ export interface Stats {
   publishers: number;
 }
 
+// ---- OpenAlex ID helpers
+const OPENALEX_BASE = "https://openalex.org/";
+
+/** Entity prefix → route segment */
+const PREFIX_ROUTE: Record<string, string> = {
+  W: "works",
+  A: "authors",
+  I: "institutions",
+  S: "sources",
+  T: "topics",
+  C: "concepts",
+};
+
+/**
+ * If `q` is an OpenAlex ID (URL like https://openalex.org/W123 or short
+ * form like W123), return the frontend route to that entity's detail page.
+ * Returns null if `q` is not an ID.
+ */
+export function resolveOpenAlexRoute(q: string): string | null {
+  let shortId = q.trim();
+  if (shortId.startsWith(OPENALEX_BASE)) {
+    shortId = shortId.slice(OPENALEX_BASE.length);
+  }
+  const prefix = shortId[0]?.toUpperCase();
+  const rest = shortId.slice(1);
+  if (prefix && PREFIX_ROUTE[prefix] && rest && /^\d+$/.test(rest)) {
+    return `/${PREFIX_ROUTE[prefix]}/${shortId.toUpperCase()}`;
+  }
+  return null;
+}
+
 // ---- API functions
 export const worksApi = {
   list: (params?: Record<string, any>) =>

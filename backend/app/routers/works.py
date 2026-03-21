@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, Query
 from app.database import get_database
-from app.utils import build_text_filter, clean_doc, paginate_params, openalex_id_filter
+from app.utils import build_search_filter, clean_doc, paginate_params, openalex_id_filter
 
 router = APIRouter(prefix="/works", tags=["works"])
 
@@ -18,7 +18,7 @@ async def list_works(
     filt: dict = {}
     if q:
         filt.update(
-            build_text_filter(q, ["title", "display_name", "abstract"])
+            build_search_filter(q, ["title", "display_name", "abstract"])
         )
     if type:
         filt["type"] = type

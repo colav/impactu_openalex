@@ -1,7 +1,8 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { worksApi, ListResponse, Work } from "@/lib/api";
+import { worksApi, ListResponse, Work, resolveOpenAlexRoute } from "@/lib/api";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
@@ -73,6 +74,7 @@ function WorkCard({ work }: { work: Work }) {
 }
 
 export default function WorksPage() {
+  const router = useRouter();
   const [q, setQ] = useState("");
   const [page, setPage] = useState(1);
   const [type, setType] = useState("");
@@ -92,6 +94,11 @@ export default function WorksPage() {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
+    const route = resolveOpenAlexRoute(q);
+    if (route) {
+      router.push(route);
+      return;
+    }
     setDebouncedQ(q);
     setPage(1);
   };
@@ -108,10 +115,11 @@ export default function WorksPage() {
       {/* Filters */}
       <Box component="form" onSubmit={handleSearch} sx={{ display: "flex", gap: 2, mb: 3, flexWrap: "wrap" }}>
         <TextField
-          label="Buscar por título"
+          label="Buscar por título o ID de OpenAlex"
           value={q}
           onChange={(e) => setQ(e.target.value)}
           size="small"
+          placeholder="ej. machine learning o https://openalex.org/W1234"
           sx={{ flexGrow: 1, minWidth: 240 }}
         />
         <FormControl size="small" sx={{ minWidth: 160 }}>
