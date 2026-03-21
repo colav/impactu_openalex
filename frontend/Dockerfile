@@ -12,6 +12,7 @@ ENV NODE_ENV=production
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
+# public/ may be empty but must exist for Next.js static assets
 COPY --from=builder /app/public ./public
 
 EXPOSE 3000
