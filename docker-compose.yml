@@ -9,6 +9,7 @@ services:
     environment:
       - MONGO_URI=mongodb://localhost:27017
       - MONGO_DB=openalexco
+      - AVAILABLE_DBS=openalexco:OpenAlex Colombia,openalex:OpenAlex Full
     restart: unless-stopped
 
   frontend:
