@@ -1,6 +1,7 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
 import { statsApi, Stats } from "@/lib/api";
+import { useDb } from "@/context/DbContext";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
@@ -49,8 +50,12 @@ function StatCard({ label, icon, href, color, value }: any) {
 }
 
 export default function HomePage() {
+  const { currentDb, defaultDb, databases } = useDb();
+  const activeDb = currentDb || defaultDb;
+  const activeDbLabel = databases.find((d) => d.key === activeDb)?.name || activeDb;
+
   const { data: stats } = useQuery<Stats>({
-    queryKey: ["stats"],
+    queryKey: ["stats", activeDb],
     queryFn: statsApi.get,
   });
 
@@ -74,7 +79,7 @@ export default function HomePage() {
           </Typography>
           <Typography variant="body1" sx={{ opacity: 0.75 }}>
             Datos indexados desde OpenAlex · Base de datos:{" "}
-            <strong>openalexco</strong>
+            <strong>{activeDbLabel || "openalexco"}</strong>
           </Typography>
         </Container>
       </Box>
@@ -100,7 +105,7 @@ export default function HomePage() {
         </Typography>
         <Typography color="text.secondary">
           ImpactU OpenAlexCO es una interfaz web para explorar los datos de producción
-          académica de Colombia almacenados en la base de datos <strong>openalexco</strong>. 
+          académica almacenados en OpenAlex. 
           Puedes buscar y filtrar trabajos científicos, autores, instituciones, revistas, 
           tópicos y conceptos de forma similar a como lo hace{" "}
           <a href="https://openalex.org" target="_blank" rel="noreferrer">

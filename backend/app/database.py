@@ -20,13 +20,13 @@ def get_database(db: str | None = Query(None, description="Database key (see /ap
 async def connect_db():
     global client
     client = AsyncIOMotorClient(settings.MONGO_URI)
-    # Ensure indexes exist (idempotent)
+    # Ensure indexes exist for all configured databases (idempotent)
     from app.indexes import ensure_indexes
-    db = client[settings.MONGO_DB]
-    try:
-        await ensure_indexes(db)
-    except Exception as exc:
-        logger.warning("Index creation warning: %s", exc)
+    for db_key in settings.databases():
+        try:
+            await ensure_indexes(client[db_key])
+        except Exception as exc:
+            logger.warning("Index creation warning on %s: %s", db_key, exc)
 
 
 async def close_db():
