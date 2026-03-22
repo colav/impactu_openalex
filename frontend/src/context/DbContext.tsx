@@ -42,10 +42,11 @@ export function DbProvider({ children }: { children: ReactNode }) {
       .then((data) => {
         setDefaultDb(data.default);
         setDatabases(data.available);
-        // If stored selection no longer exists, clear it
+        // If stored selection no longer exists or equals default, clear it
         if (
           currentDb &&
-          !data.available.find((d) => d.key === currentDb)
+          (!data.available.find((d) => d.key === currentDb) ||
+            currentDb === data.default)
         ) {
           _setCurrentDb("");
           localStorage.removeItem("selectedDb");
@@ -62,7 +63,8 @@ export function DbProvider({ children }: { children: ReactNode }) {
   const setCurrentDb = useCallback(
     (db: string) => {
       _setCurrentDb(db);
-      if (db) {
+      // Don't persist the default DB — avoids stale localStorage across deploys
+      if (db && db !== defaultDb) {
         localStorage.setItem("selectedDb", db);
       } else {
         localStorage.removeItem("selectedDb");
@@ -70,7 +72,7 @@ export function DbProvider({ children }: { children: ReactNode }) {
       // Clear React Query cache so all queries re-fetch against new DB
       queryClient.clear();
     },
-    [queryClient]
+    [queryClient, defaultDb]
   );
 
   return (
