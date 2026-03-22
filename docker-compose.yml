@@ -16,6 +16,8 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      args:
+        - NEXT_PUBLIC_API_URL=https://openalex.colav.co/api
     ports:
       - "3000:3000"
     environment:
