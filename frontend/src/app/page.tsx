@@ -56,7 +56,7 @@ export default function HomePage() {
 
   const { data: stats } = useQuery<Stats>({
     queryKey: ["stats", activeDb],
-    queryFn: statsApi.get,
+    queryFn: () => statsApi.get(activeDb || undefined),
   });
 
   return (

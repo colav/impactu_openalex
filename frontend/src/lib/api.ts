@@ -234,7 +234,8 @@ export const conceptsApi = {
 };
 
 export const statsApi = {
-  get: () => api.get<Stats>("/stats").then((r) => r.data),
+  get: (db?: string) =>
+    api.get<Stats>("/stats", { params: db ? { db } : {} }).then((r) => r.data),
 };
 
 export default api;
