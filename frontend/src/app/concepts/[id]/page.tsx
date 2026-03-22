@@ -2,6 +2,7 @@
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { conceptsApi, Concept } from "@/lib/api";
+import { useDb } from "@/context/DbContext";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
@@ -25,10 +26,12 @@ function StatBox({ label, value }: { label: string; value: any }) {
 export default function ConceptDetailPage() {
   const params = useParams();
   const id = params.id as string;
+  const { currentDb, defaultDb } = useDb();
+  const activeDb = currentDb || defaultDb || undefined;
 
   const { data: concept, isLoading, error } = useQuery<Concept>({
-    queryKey: ["concept", id],
-    queryFn: () => conceptsApi.get(id),
+    queryKey: ["concept", id, activeDb],
+    queryFn: () => conceptsApi.get(id, activeDb),
   });
 
   if (isLoading || error) return <LoadingError loading={isLoading} error={error} />;

@@ -194,43 +194,43 @@ export function resolveOpenAlexRoute(q: string): string | null {
 export const worksApi = {
   list: (params?: Record<string, any>) =>
     api.get<ListResponse<Work>>("/works", { params }).then((r) => r.data),
-  get: (id: string) =>
-    api.get<Work>(`/works/${id}`).then((r) => r.data),
+  get: (id: string, db?: string) =>
+    api.get<Work>(`/works/${id}`, { params: db ? { db } : {} }).then((r) => r.data),
 };
 
 export const authorsApi = {
   list: (params?: Record<string, any>) =>
     api.get<ListResponse<Author>>("/authors", { params }).then((r) => r.data),
-  get: (id: string) =>
-    api.get<Author>(`/authors/${id}`).then((r) => r.data),
+  get: (id: string, db?: string) =>
+    api.get<Author>(`/authors/${id}`, { params: db ? { db } : {} }).then((r) => r.data),
 };
 
 export const institutionsApi = {
   list: (params?: Record<string, any>) =>
     api.get<ListResponse<Institution>>("/institutions", { params }).then((r) => r.data),
-  get: (id: string) =>
-    api.get<Institution>(`/institutions/${id}`).then((r) => r.data),
+  get: (id: string, db?: string) =>
+    api.get<Institution>(`/institutions/${id}`, { params: db ? { db } : {} }).then((r) => r.data),
 };
 
 export const sourcesApi = {
   list: (params?: Record<string, any>) =>
     api.get<ListResponse<Source>>("/sources", { params }).then((r) => r.data),
-  get: (id: string) =>
-    api.get<Source>(`/sources/${id}`).then((r) => r.data),
+  get: (id: string, db?: string) =>
+    api.get<Source>(`/sources/${id}`, { params: db ? { db } : {} }).then((r) => r.data),
 };
 
 export const topicsApi = {
   list: (params?: Record<string, any>) =>
     api.get<ListResponse<Topic>>("/topics", { params }).then((r) => r.data),
-  get: (id: string) =>
-    api.get<Topic>(`/topics/${id}`).then((r) => r.data),
+  get: (id: string, db?: string) =>
+    api.get<Topic>(`/topics/${id}`, { params: db ? { db } : {} }).then((r) => r.data),
 };
 
 export const conceptsApi = {
   list: (params?: Record<string, any>) =>
     api.get<ListResponse<Concept>>("/concepts", { params }).then((r) => r.data),
-  get: (id: string) =>
-    api.get<Concept>(`/concepts/${id}`).then((r) => r.data),
+  get: (id: string, db?: string) =>
+    api.get<Concept>(`/concepts/${id}`, { params: db ? { db } : {} }).then((r) => r.data),
 };
 
 export const statsApi = {

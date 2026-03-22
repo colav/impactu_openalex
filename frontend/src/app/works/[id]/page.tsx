@@ -2,6 +2,7 @@
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { worksApi, Work } from "@/lib/api";
+import { useDb } from "@/context/DbContext";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
@@ -25,10 +26,12 @@ import JsonViewer from "@/components/JsonViewer";
 export default function WorkDetailPage() {
   const params = useParams();
   const id = params.id as string;
+  const { currentDb, defaultDb } = useDb();
+  const activeDb = currentDb || defaultDb || undefined;
 
   const { data: work, isLoading, error } = useQuery<Work>({
-    queryKey: ["work", id],
-    queryFn: () => worksApi.get(id),
+    queryKey: ["work", id, activeDb],
+    queryFn: () => worksApi.get(id, activeDb),
   });
 
   if (isLoading || error) return <LoadingError loading={isLoading} error={error} />;

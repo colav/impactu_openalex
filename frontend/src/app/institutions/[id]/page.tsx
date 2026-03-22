@@ -2,6 +2,7 @@
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { institutionsApi, Institution } from "@/lib/api";
+import { useDb } from "@/context/DbContext";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
@@ -26,10 +27,12 @@ function StatBox({ label, value }: { label: string; value: any }) {
 export default function InstitutionDetailPage() {
   const params = useParams();
   const id = params.id as string;
+  const { currentDb, defaultDb } = useDb();
+  const activeDb = currentDb || defaultDb || undefined;
 
   const { data: inst, isLoading, error } = useQuery<Institution>({
-    queryKey: ["institution", id],
-    queryFn: () => institutionsApi.get(id),
+    queryKey: ["institution", id, activeDb],
+    queryFn: () => institutionsApi.get(id, activeDb),
   });
 
   if (isLoading || error) return <LoadingError loading={isLoading} error={error} />;
