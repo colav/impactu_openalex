@@ -1,15 +1,12 @@
 "use client";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import InputBase from "@mui/material/InputBase";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
-import SearchIcon from "@mui/icons-material/Search";
 import StorageIcon from "@mui/icons-material/Storage";
 import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
@@ -17,47 +14,9 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
 import Chip from "@mui/material/Chip";
-import { alpha, styled } from "@mui/material/styles";
 import Link from "next/link";
 import { useDb } from "@/context/DbContext";
-
-const SEARCH_ENTITIES = [
-  { value: "works", label: "Works" },
-  { value: "authors", label: "Authors" },
-  { value: "institutions", label: "Institutions" },
-  { value: "sources", label: "Sources" },
-  { value: "topics", label: "Topics" },
-  { value: "concepts", label: "Concepts" },
-];
-
-const Search = styled("div")(({ theme }) => ({
-  position: "relative",
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
-  "&:hover": { backgroundColor: alpha(theme.palette.common.white, 0.25) },
-  marginLeft: theme.spacing(2),
-  display: "flex",
-  alignItems: "center",
-}));
-
-const SearchIconWrapper = styled("div")(({ theme }) => ({
-  padding: theme.spacing(0, 1, 0, 1),
-  height: "100%",
-  pointerEvents: "none",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: "inherit",
-  "& .MuiInputBase-input": {
-    padding: theme.spacing(1, 1, 1, 0),
-    width: "18ch",
-  },
-}));
 
 const NAV_LINKS = [
   { label: "Works", href: "/works" },
@@ -69,21 +28,11 @@ const NAV_LINKS = [
 ];
 
 export default function Navbar() {
-  const router = useRouter();
   const { currentDb, defaultDb, databases, setCurrentDb } = useDb();
-  const [q, setQ] = useState("");
-  const [entity, setEntity] = useState("works");
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [dbAnchor, setDbAnchor] = useState<null | HTMLElement>(null);
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (q.trim()) router.push(`/${entity}?q=${encodeURIComponent(q.trim())}`);
-  };
-
   const activeDb = databases.find((d) => d.key === (currentDb || defaultDb));
-  const activeEntityLabel =
-    SEARCH_ENTITIES.find((e) => e.value === entity)?.label.toLowerCase() ?? "works";
 
   return (
     <>
@@ -156,48 +105,7 @@ export default function Navbar() {
             </>
           )}
 
-          {/* Search bar with entity selector */}
-          <Box component="form" onSubmit={handleSearch}>
-            <Search>
-              <Select
-                value={entity}
-                onChange={(e) => setEntity(e.target.value)}
-                variant="standard"
-                disableUnderline
-                size="small"
-                sx={{
-                  color: "white",
-                  pl: 1,
-                  fontSize: "0.8rem",
-                  "& .MuiSelect-icon": { color: "white" },
-                  "& .MuiSelect-select": { py: 0.5 },
-                  minWidth: 90,
-                }}
-              >
-                {SEARCH_ENTITIES.map((opt) => (
-                  <MenuItem key={opt.value} value={opt.value} sx={{ fontSize: "0.85rem" }}>
-                    {opt.label}
-                  </MenuItem>
-                ))}
-              </Select>
-              <Box
-                sx={{
-                  width: "1px",
-                  bgcolor: "rgba(255,255,255,0.3)",
-                  alignSelf: "stretch",
-                  my: 0.5,
-                }}
-              />
-              <SearchIconWrapper>
-                <SearchIcon fontSize="small" />
-              </SearchIconWrapper>
-              <StyledInputBase
-                placeholder={`Buscar ${activeEntityLabel}…`}
-                value={q}
-                onChange={(e) => setQ(e.target.value)}
-              />
-            </Search>
-          </Box>
+
         </Toolbar>
       </AppBar>
 
